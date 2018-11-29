@@ -1,0 +1,61 @@
+@font-face {
+  font-family: 'xui';
+  /* project id 942163 */
+  src: url('//at.alicdn.com/t/font_942163_sj6438ecwv.eot');
+  src: url('//at.alicdn.com/t/font_942163_sj6438ecwv.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_942163_sj6438ecwv.woff') format('woff'), url('//at.alicdn.com/t/font_942163_sj6438ecwv.ttf') format('truetype'), url('//at.alicdn.com/t/font_942163_sj6438ecwv.svg#xui') format('svg');
+}
+.xui {
+  font-family: "xui" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-next:before {
+  content: "\E697";
+}
+.icon-next1:before {
+  content: "\E6D1";
+}
+.icon-last:before {
+  content: "\E6D2";
+}
+.icon-last1:before {
+  content: "\E62A";
+}
+.x-paging {
+  color: #959595;
+  text-align: center;
+}
+.x-paging button {
+  background-color: #FFF;
+  border: 1px solid #E0DFDF;
+  color: #333333;
+  cursor: pointer;
+  height: 26px;
+  width: 26px;
+  margin: 0 2px;
+}
+.x-paging button.disabled {
+  background-color: #F0F0F0;
+  color: #E0DFDF;
+  cursor: stop;
+}
+.x-paging > span {
+  margin: 0 10px;
+}
+.x-paging > span .sum {
+  margin-left: 15px;
+}
+.x-paging input {
+  border: 1px solid #E0DFDF;
+  width: 50px;
+  height: 26px;
+  line-height: 26px;
+  margin: 0 6px;
+  padding: 0 5px;
+}
+.x-paging * {
+  outline: none;
+  padding: 0;
+}
