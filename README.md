@@ -27,3 +27,12 @@ react分页组件x-paging，它依赖于x-input组件，主要是页码限定为
 当前页码，默认为1
 ## callback
 翻页时的回调方法
+
+### 关于作者
+[https://github.com/tianxiangbing](https://github.com/tianxiangbing)
+
+### 组件github地址
+[https://github.com/react-xui/x-paging](https://github.com/react-xui/x-paging)
+
+### xui
+react xui组件一直在持续更新中，欢迎大家关注[https://github.com/react-xui](https://github.com/react-xui)
