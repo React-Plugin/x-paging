@@ -14,7 +14,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-       <Paging total="60" pagesize="5" callback={this.callback.bind(this)}/>
+       <Paging total="60" pagesize="5" current="2" callback={this.callback.bind(this)}/>
       </div>
     )
   }
