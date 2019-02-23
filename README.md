@@ -27,7 +27,8 @@ react分页组件x-paging，它依赖于x-input组件，主要是页码限定为
 当前页码，默认为1
 ## callback
 翻页时的回调方法
-
+## local
+国际化语言包
 ### 关于作者
 [https://github.com/tianxiangbing](https://github.com/tianxiangbing)
 

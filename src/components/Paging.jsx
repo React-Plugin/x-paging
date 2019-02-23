@@ -8,6 +8,8 @@
  */
 import React,{ Component } from "react";
 import { PosInterInput} from "jsx-input";
+import I18n from 'x-i18n';
+import local from '../local/zh_CN';
 
 export default class Paging extends Component {
     constructor(props) {
@@ -88,19 +90,33 @@ export default class Paging extends Component {
             }
         }
     }
-    render() {
+    renderContent=(local,localCode)=>{
         let obj = this.state;
         return (
             <div className="x-paging">
                 <button onClick={this.goFirst} className={this.state.isFirst ? 'disabled':''}><i className="xui icon-last"/></button>
                 <button onClick={this.goPrev} className={this.state.isFirst ? 'disabled':''}><i className="xui icon-last1" /></button>
                 <span>
-                    第<PosInterInput onChange={this.onChangeHandle} onBlur={this.onBlur} onKeyUp={this.onKeyup} value={this.state.current} placeholder="页码数" />页
-                    <span className="sum">共{obj.sumPage}页</span>
+                    {local.go}<PosInterInput onChange={this.onChangeHandle} onBlur={this.onBlur} onKeyUp={this.onKeyup} value={this.state.current} placeholder={local.pageNum} />{local.page}
+                    <span className="sum">{local.sum}{obj.sumPage}{local.page}</span>
                 </span>
                 <button onClick={this.goNext} className={this.state.isLast ? 'disabled':''}><i className="xui icon-next" /></button>
                 <button onClick={this.goLast} className={this.state.isLast ? 'disabled':''}><i className="xui icon-next1" /></button>
             </div>
         )
+    }
+    render() {
+        let defaultValue = {};
+        let localData = this.props.local;
+        defaultValue={
+            ...local,
+            ...localData
+        };
+        return (
+            <I18n componentName="Paging" defaultValue={defaultValue} >
+                {this.renderContent}
+            </I18n>
+        )
+        
     }
 } 

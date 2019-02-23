@@ -1,6 +1,6 @@
 {
   "name": "x-paging",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "react xui  x-paing 分页组件",
   "main": "./lib/index.js",
   "repository": {
@@ -47,9 +47,9 @@
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
     "npm-run-all": "^3.1.2",
-    "react": "^15.0.0",
+    "react": "^16.0.0",
     "react-addons-test-utils": "^15.0.0",
-    "react-dom": "^15.0.0",
+    "react-dom": "^16.0.0",
     "rimraf": "^2.6.1",
     "style-loader": "^0.13.1",
     "uglify-js": "^2.6.0",
@@ -57,7 +57,8 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "jsx-input": "^0.0.5"
+    "jsx-input": "^0.0.5",
+    "x-i18n": "0.0.1"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.6.1",
