@@ -10,8 +10,20 @@ import React,{ Component } from "react";
 import { PosInterInput} from "jsx-input";
 import I18n from 'x-i18n';
 import local from '../local/zh_CN';
+import PropTypes from "prop-types";
 
 export default class Paging extends Component {
+    
+  static propTypes = {
+      current:PropTypes.number.isRequired,
+      pagesize:PropTypes.number.isRequired,
+      total:PropTypes.number.isRequired
+  };
+  static defaultProps = {
+    current:1,
+    pagesize:10,
+    total:0
+  };
     constructor(props) {
         super(props);
         let current = props.current||1;
@@ -56,20 +68,20 @@ export default class Paging extends Component {
     }
     goPrev(){
         if(this.state.current >1 ){
-            this.setState({current:this.state.current-1},()=>{
+            this.setState({current:+this.state.current-1},()=>{
                 this.reComputeState();
             });
         }
     }
     goNext(){
         if(!this.state.isLast){
-            this.setState({current:this.state.current+1},()=>{
+            this.setState({current:+this.state.current+1},()=>{
                 this.reComputeState();
             });
         }
     }
     onBlur(){
-        this.setState({current:this.state.current});
+        this.setState({current:+this.state.current});
     }
     goLast(){
         if(!this.state.isLast){
@@ -81,7 +93,7 @@ export default class Paging extends Component {
     onKeyup(e){
         if(e.keyCode ===13){
             if(this.state.sumPage<e.target.value || e.target.value<1){
-                this.setState({current:this.state.current});
+                this.setState({current:+this.state.current});
                 // e.target.value = this.state.current;
             }else{
                 this.setState({current:parseInt(e.target.value,0)},()=>{

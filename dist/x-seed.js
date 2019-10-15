@@ -120,6 +120,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _zh_CN2 = _interopRequireDefault(_zh_CN);
 
+	var _propTypes = __webpack_require__(7);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
 	function _interopRequireDefault(obj) {
 	    return obj && obj.__esModule ? obj : { default: obj };
 	}
@@ -223,7 +227,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _this4 = this;
 
 	            if (this.state.current > 1) {
-	                this.setState({ current: this.state.current - 1 }, function () {
+	                this.setState({ current: +this.state.current - 1 }, function () {
 	                    _this4.reComputeState();
 	                });
 	            }
@@ -234,7 +238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _this5 = this;
 
 	            if (!this.state.isLast) {
-	                this.setState({ current: this.state.current + 1 }, function () {
+	                this.setState({ current: +this.state.current + 1 }, function () {
 	                    _this5.reComputeState();
 	                });
 	            }
@@ -242,7 +246,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "onBlur",
 	        value: function onBlur() {
-	            this.setState({ current: this.state.current });
+	            this.setState({ current: +this.state.current });
 	        }
 	    }, {
 	        key: "goLast",
@@ -262,7 +266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (e.keyCode === 13) {
 	                if (this.state.sumPage < e.target.value || e.target.value < 1) {
-	                    this.setState({ current: this.state.current });
+	                    this.setState({ current: +this.state.current });
 	                    // e.target.value = this.state.current;
 	                } else {
 	                    this.setState({ current: parseInt(e.target.value, 0) }, function () {
@@ -284,6 +288,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Paging;
 	}(_react.Component);
 
+	Paging.propTypes = {
+	    current: _propTypes2.default.number.isRequired,
+	    pagesize: _propTypes2.default.number.isRequired,
+	    total: _propTypes2.default.number.isRequired
+	};
+	Paging.defaultProps = {
+	    current: 1,
+	    pagesize: 10,
+	    total: 0
+	};
 	exports.default = Paging;
 
 /***/ }),

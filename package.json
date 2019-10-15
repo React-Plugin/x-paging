@@ -1,6 +1,6 @@
 {
   "name": "x-paging",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "react xui  x-paing 分页组件",
   "main": "./lib/index.js",
   "repository": {
