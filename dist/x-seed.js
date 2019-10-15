@@ -362,20 +362,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 	//文本输入框
-	var Input = exports.Input = function (_Component) {
-	    _inherits(Input, _Component);
+	var Base = function (_Component) {
+	    _inherits(Base, _Component);
 
-	    function Input(props) {
-	        _classCallCheck(this, Input);
+	    function Base(props) {
+	        _classCallCheck(this, Base);
 
-	        var _this = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (Base.__proto__ || Object.getPrototypeOf(Base)).call(this, props));
 
 	        _this.state = { value: typeof props.value === 'undefined' ? "" : props.value };
 	        _this.onChangeHandle = _this.onChangeHandle.bind(_this);
 	        return _this;
 	    }
 
-	    _createClass(Input, [{
+	    _createClass(Base, [{
 	        key: "componentWillReceiveProps",
 	        value: function componentWillReceiveProps(newProps, newState) {
 	            if (typeof newProps.value !== 'undefined' && newProps.value != this.state.value) {
@@ -385,10 +385,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "onChangeHandle",
 	        value: function onChangeHandle(e) {
-	            var value = e.target.value;
+	            var _this2 = this;
 
-	            this.setState({ value: value });
-	            this.props.onChange && this.props.onChange(e, value);
+	            var value = e.target.value;
+	            var target = e.target;
+
+	            this.setState({ value: value }, function () {
+	                _this2.props.onChange && _this2.props.onChange(target);
+	            });
 	        }
 	    }, {
 	        key: "render",
@@ -399,61 +403,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	            delete newProps['decimals'];
 	            delete newProps['onChange'];
 	            // delete newProps['value'];
-	            return _react2.default.createElement("input", _extends({ className: cls, onChange: this.onChangeHandle, value: this.state.value }, newProps));
+	            var value = this.state.value;
+	            (typeof value === "undefined" ? "undefined" : _typeof(value)) === 'object' ? value = JSON.stringify(value) : null;
+	            var multiple = newProps.multiple;
+
+	            var props = _extends({ onChange: this.onChangeHandle }, newProps, { value: value });
+	            var tag = multiple ? 'textarea' : 'input';
+	            // console.log(value,111,newProps)
+	            return _react2.default.createElement(tag, props);
+	            // return (
+	            //     <input className={cls} onChange={this.onChangeHandle} value={value}  />
+	            // )
 	        }
 	    }]);
 
-	    return Input;
+	    return Base;
 	}(_react.Component);
 
 	// export class NumericInput extends Component{
 	//     render(){
 	//         let reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
-	//         return <Input reg={reg} />
+	//         return <Base reg={reg} />
 	//     }
 	// }
 
 
-	var InputContainer = function InputContainer(WrappedComponnet) {
-	    var reg = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+	var InputContainer = function InputContainer(WrappedComponnet, reg) {
 	    return function (_Component2) {
 	        _inherits(_class, _Component2);
 
 	        function _class(props) {
 	            _classCallCheck(this, _class);
 
-	            var _this2 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
+	            var _this3 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this, props));
 
-	            _this2.state = { value: typeof props.value === 'undefined' ? "" : props.value };
-	            _this2.decimals = props.decimals;
-	            _this2.onChangeHandle = _this2.onChangeHandle.bind(_this2);
-	            return _this2;
+	            _this3.decimals = props.decimals;
+	            _this3.state = { value: typeof props.value === 'undefined' ? "" : _this3.format(props.value, true) };
+	            _this3.onChangeHandle = _this3.onChangeHandle.bind(_this3);
+	            return _this3;
 	        }
 
 	        _createClass(_class, [{
 	            key: "componentWillReceiveProps",
 	            value: function componentWillReceiveProps(newProps, newState) {
-	                if (newProps.value != this.state.value) {
-	                    this.setState({ value: newProps.value });
+	                if (newProps.value != this.state.value && typeof newProps.value !== 'undefined') {
+	                    this.format(newProps.value);
+	                    // this.setState({ value: newProps.value });
+	                }
+	            }
+	        }, {
+	            key: "format",
+	            value: function format(value, isinit) {
+	                var _this4 = this;
+
+	                var istriggerChange = true;
+	                if (reg) {
+	                    var oldvalue = value;
+	                    (typeof value === "undefined" ? "undefined" : _typeof(value)) === 'object' ? value = JSON.stringify(value) : null;
+	                    value = String(value).replace(/\,/g, '');
+	                    if (this.state && (oldvalue == this.state.value || value == this.state.value)) {
+	                        istriggerChange = false;
+	                    }
+	                    if (reg && value != '') {
+	                        var arr = value.split('.');
+	                        if (arr.length > 1) {
+	                            value = arr[0] + '.' + arr[1].substr(0, this.decimals);
+	                        }
+	                        var res = value.match(reg);
+	                        value = res === null ? '' : res[0];
+	                    }
+	                }
+	                if (isinit) {
+	                    return value;
+	                } else {
+	                    this.setState({ value: value }, function () {
+	                        istriggerChange && _this4.props.onChange && _this4.props.onChange(value);
+	                    });
 	                }
 	            }
 	        }, {
 	            key: "onChangeHandle",
-	            value: function onChangeHandle(e) {
-	                var _this3 = this;
+	            value: function onChangeHandle(target) {
+	                var value = target.value;
 
-	                var value = e.target.value;
-
-	                var arr = value.split('.');
-	                if (arr.length > 1) {
-	                    value = arr[0] + '.' + arr[1].substr(0, this.decimals);
-	                }
-
-	                if (!reg || reg.test(value) || value === '') {
-	                    this.setState({ value: value }, function () {
-	                        _this3.props.onChange && _this3.props.onChange(value);
-	                    });
-	                }
+	                this.format(value, false, target);
 	            }
 	        }, {
 	            key: "render",
@@ -470,10 +503,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return _class;
 	    }(_react.Component);
 	};
-	var NumericInput = InputContainer(Input); //数字
-	var InterInput = InputContainer(Input, /^-?(0|[1-9][0-9]*)$/); //整数
-	var PosInterInput = InputContainer(Input, /^(0|[1-9][0-9]*)$/); //正整数
-	var LetterInput = InputContainer(Input, /^[a-zA-Z]+$/); //正整数
+	var Input = InputContainer(Base);
+	var NumericInput = InputContainer(Base, /-?(0|[1-9][0-9]*)(\.[0-9]*)?/); //数字
+	var InterInput = InputContainer(Base, /-?(0|[1-9][0-9]*)/); //整数
+	var PosInterInput = InputContainer(Base, /(0|[1-9][0-9]*)/); //正整数
+	var LetterInput = InputContainer(Base, /[a-zA-Z]+/); //字母
 
 	var setCaretPosition = function setCaretPosition(tObj, sPos) {
 	    if (tObj.setSelectionRange) {
@@ -495,13 +529,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var selectRange = document.selection.createRange();
 	        selectRange.moveStart('character', -element.value.length);
 	        cursorPos = selectRange.text.length;
-	    } else if (element.selectionStart || element.selectionStart == '0') {
+	    } else if (element && (element.selectionStart || element.selectionStart == '0')) {
 	        cursorPos = element.selectionStart;
 	    }
 	    return cursorPos;
 	};
-	var FormatContainer = function FormatContainer(WrappedComponnet, format) {
-	    return function (_NumericInput) {
+	//getDisplayName
+	function getDisplayName(WrappedComponent) {
+	    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+	}
+	var FormatContainer = function FormatContainer(WrappedComponnet, _format) {
+	    var _class2, _temp;
+
+	    return _temp = _class2 = function (_NumericInput) {
 	        _inherits(_class2, _NumericInput);
 
 	        function _class2() {
@@ -512,31 +552,56 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        _createClass(_class2, [{
 	            key: "onChangeHandle",
-	            value: function onChangeHandle(e, v) {
-	                var _this5 = this;
+	            value: function onChangeHandle(target) {
+	                var value = target.value;
 
-	                var value = format(e.target.value.replace(/\,/g, ''), this.props);
-	                var target = e.target;
-	                var len = target.value.length;
-	                var pos = getPosition(target);
-	                var rightpos = len - pos; //算出从右计算的光标位置
-	                this.setState({ value: value }, function () {
-	                    var tmp = _this5.state.value.length - rightpos;
-	                    setCaretPosition(target, tmp);
-	                    _this5.props.onChange && _this5.props.onChange(value);
-	                });
+	                this.format(value, false, target);
+	            }
+	        }, {
+	            key: "format",
+	            value: function format(value, isinit, target) {
+	                var _this6 = this;
+
+	                var oldvalue = value;
+	                value = _format(String(value).replace(/\,/g, ''), this.props);
+	                var istriggerChange = true;
+	                if (this.state && (oldvalue == this.state.value || value == this.state.value)) {
+	                    istriggerChange = false;
+	                }
+	                if (!isinit) {
+	                    //计算出新值和旧值之间相差几个千分位
+	                    var ql = value.split(',').length - this.state.value.split(',').length;
+	                    var rightpos = 0;
+	                    if (target) {
+	                        var pos = getPosition(target);
+	                        var len = target.value.length;
+	                        rightpos = len - pos; //算出从右计算的光标位置
+	                    }
+	                    // console.log('right:',rightpos)
+	                    this.setState({ value: value }, function () {
+	                        if (target) {
+	                            var tmp = _this6.state.value.length - rightpos;
+	                            // console.log(tmp,this.state.value.length,rightpos)
+	                            // console.log(tmp)
+	                            setCaretPosition(target, tmp);
+	                        }
+	                        istriggerChange && _this6.props.onChange && _this6.props.onChange(value.replace(/\,/g, ''));
+	                    });
+	                } else {
+	                    return value;
+	                }
 	            }
 	        }]);
 
 	        return _class2;
-	    }(NumericInput);
+	    }(NumericInput), _class2.displayName = "HOC(" + getDisplayName(WrappedComponnet) + ")", _temp;
 	};
 
 	var formatThousandthNumber = function formatThousandthNumber(num, _ref) {
 	    var decimals = _ref.decimals;
 
 	    // number = number.replace(/\,/g,'');
-	    num = String(num);
+	    num = String(num).replace(/\,/g, '');
 	    var arr = num.split('.');
 	    var number = arr[0];
 	    // let decimals  = arr.length>1 ?arr[1].length:0;
@@ -567,7 +632,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return str;
 	    }
 	};
-	var ThousandInput = FormatContainer(Input, formatThousandthNumber);
+	var ThousandInput = FormatContainer(Base, formatThousandthNumber);
+	exports.Input = Input;
 	exports.InputContainer = InputContainer;
 	exports.NumericInput = NumericInput;
 	exports.InterInput = InterInput;
@@ -581,13 +647,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _I18n = __webpack_require__(6);
-
-	var _I18n2 = _interopRequireDefault(_I18n);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	module.exports = _I18n2.default; //使用module.exports时，从es6到es5生成的dist不会出现export.default的问题.
 	/*
 	 * Created with Visual Studio Code.
 	 * github: https://github.com/React-Plugin/x-seed
@@ -596,6 +655,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Time: 20:00:00
 	 * Contact: 55342775@qq.com
 	 */
+	// import I18n,{I18nContext} from './components/I18n';
+	var obj = __webpack_require__(6);
+	// console.log(obj)
+	module.exports = obj;
+	// module.exports.default = I18n;  //使用module.exports时，从es6到es5生成的dist不会出现export.default的问题.
+	// module.exports = I18nContext;
 
 /***/ }),
 /* 6 */
@@ -606,6 +671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.I18nContext = undefined;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -639,7 +705,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
 
-	var I18n = _react2.default.createContext({
+	var I18nContext = exports.I18nContext = _react2.default.createContext({
 	  local: _zh_CN2.default
 	});
 	// export default I18n;
@@ -662,21 +728,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _props = this.props,
 	          componentName = _props.componentName,
 	          defaultValue = _props.defaultValue;
+	      //默认语言包如果未传值，则使用i18n的默认包
+	      //如果顶层还有i18n的，进行合并
+	      // debugger;
 
-	      debugger;
-	      return _extends({}, local[componentName || 'global'], defaultValue||{});
+	      return _extends({}, local[componentName || 'global'], defaultValue || {});
 	    }
 	    //当前语言代码
 
 	  }, {
 	    key: 'getLocalCode',
-	    value: function getLocalCode() {}
+	    value: function getLocalCode() {
+	      var local = this.context.local;
+
+	      return local.local;
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var localData = this.props.defaultValue || _zh_CN2.default;
 	      return _react2.default.createElement(
-	        I18n.Provider,
-	        { value: _zh_CN2.default },
+	        I18nContext.Provider,
+	        { value: localData },
 	        this.props.children(this.getLocalData(), this.getLocalCode())
 	      );
 	    }
@@ -715,7 +788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// }
 
 
-	LocalReceiver.contextType = I18n;
+	LocalReceiver.contextType = I18nContext;
 	exports.default = LocalReceiver;
 
 /***/ }),
@@ -760,7 +833,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ (function(module, exports) {
 
-	/** @license React v16.8.3
+	/** @license React v16.10.2
 	 * react-is.production.min.js
 	 *
 	 * Copyright (c) Facebook, Inc. and its affiliates.
@@ -770,18 +843,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	'use strict';Object.defineProperty(exports,"__esModule",{value:!0});
-	var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):60103,d=b?Symbol.for("react.portal"):60106,e=b?Symbol.for("react.fragment"):60107,f=b?Symbol.for("react.strict_mode"):60108,g=b?Symbol.for("react.profiler"):60114,h=b?Symbol.for("react.provider"):60109,k=b?Symbol.for("react.context"):60110,l=b?Symbol.for("react.async_mode"):60111,m=b?Symbol.for("react.concurrent_mode"):60111,n=b?Symbol.for("react.forward_ref"):60112,p=b?Symbol.for("react.suspense"):60113,q=b?Symbol.for("react.memo"):
-	60115,r=b?Symbol.for("react.lazy"):60116;function t(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case h:return a;default:return u}}case r:case q:case d:return u}}}function v(a){return t(a)===m}exports.typeOf=t;exports.AsyncMode=l;exports.ConcurrentMode=m;exports.ContextConsumer=k;exports.ContextProvider=h;exports.Element=c;exports.ForwardRef=n;
-	exports.Fragment=e;exports.Lazy=r;exports.Memo=q;exports.Portal=d;exports.Profiler=g;exports.StrictMode=f;exports.Suspense=p;exports.isValidElementType=function(a){return"string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||"object"===typeof a&&null!==a&&(a.$$typeof===r||a.$$typeof===q||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n)};exports.isAsyncMode=function(a){return v(a)||t(a)===l};exports.isConcurrentMode=v;exports.isContextConsumer=function(a){return t(a)===k};
-	exports.isContextProvider=function(a){return t(a)===h};exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===c};exports.isForwardRef=function(a){return t(a)===n};exports.isFragment=function(a){return t(a)===e};exports.isLazy=function(a){return t(a)===r};exports.isMemo=function(a){return t(a)===q};exports.isPortal=function(a){return t(a)===d};exports.isProfiler=function(a){return t(a)===g};exports.isStrictMode=function(a){return t(a)===f};
-	exports.isSuspense=function(a){return t(a)===p};
+	var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):60103,d=b?Symbol.for("react.portal"):60106,e=b?Symbol.for("react.fragment"):60107,f=b?Symbol.for("react.strict_mode"):60108,g=b?Symbol.for("react.profiler"):60114,h=b?Symbol.for("react.provider"):60109,k=b?Symbol.for("react.context"):60110,l=b?Symbol.for("react.async_mode"):60111,m=b?Symbol.for("react.concurrent_mode"):60111,n=b?Symbol.for("react.forward_ref"):60112,p=b?Symbol.for("react.suspense"):60113,q=b?Symbol.for("react.suspense_list"):
+	60120,r=b?Symbol.for("react.memo"):60115,t=b?Symbol.for("react.lazy"):60116,v=b?Symbol.for("react.fundamental"):60117,w=b?Symbol.for("react.responder"):60118,x=b?Symbol.for("react.scope"):60119;function y(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case h:return a;default:return u}}case t:case r:case d:return u}}}function z(a){return y(a)===m}
+	exports.typeOf=y;exports.AsyncMode=l;exports.ConcurrentMode=m;exports.ContextConsumer=k;exports.ContextProvider=h;exports.Element=c;exports.ForwardRef=n;exports.Fragment=e;exports.Lazy=t;exports.Memo=r;exports.Portal=d;exports.Profiler=g;exports.StrictMode=f;exports.Suspense=p;
+	exports.isValidElementType=function(a){return"string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||a===q||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n||a.$$typeof===v||a.$$typeof===w||a.$$typeof===x)};exports.isAsyncMode=function(a){return z(a)||y(a)===l};exports.isConcurrentMode=z;exports.isContextConsumer=function(a){return y(a)===k};exports.isContextProvider=function(a){return y(a)===h};
+	exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===c};exports.isForwardRef=function(a){return y(a)===n};exports.isFragment=function(a){return y(a)===e};exports.isLazy=function(a){return y(a)===t};exports.isMemo=function(a){return y(a)===r};exports.isPortal=function(a){return y(a)===d};exports.isProfiler=function(a){return y(a)===g};exports.isStrictMode=function(a){return y(a)===f};exports.isSuspense=function(a){return y(a)===p};
 
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/** @license React v16.8.3
+	/** @license React v16.10.2
 	 * react-is.development.js
 	 *
 	 * Copyright (c) Facebook, Inc. and its affiliates.
@@ -803,25 +876,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
 	// nor polyfill, then a plain number is used for performance.
 	var hasSymbol = typeof Symbol === 'function' && Symbol.for;
-
 	var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
 	var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
 	var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
 	var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
 	var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
 	var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
-	var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
+	var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+	// (unstable) APIs that have been removed. Can we remove the symbols?
+
 	var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
 	var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
 	var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
 	var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+	var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
 	var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
 	var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+	var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+	var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+	var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
 
 	function isValidElementType(type) {
-	  return typeof type === 'string' || typeof type === 'function' ||
-	  // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-	  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
+	  return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+	  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE);
 	}
 
 	/**
@@ -837,12 +914,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * paths. Removing the logging code for production environments will keep the
 	 * same logic and follow the same code paths.
 	 */
-
-	var lowPriorityWarning = function () {};
+	var lowPriorityWarningWithoutStack = function () {};
 
 	{
 	  var printWarning = function (format) {
-	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	      args[_key - 1] = arguments[_key];
 	    }
 
@@ -850,9 +926,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var message = 'Warning: ' + format.replace(/%s/g, function () {
 	      return args[argIndex++];
 	    });
+
 	    if (typeof console !== 'undefined') {
 	      console.warn(message);
 	    }
+
 	    try {
 	      // --- Welcome to debugging React ---
 	      // This error was thrown as a convenience so that you can use this stack
@@ -861,25 +939,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } catch (x) {}
 	  };
 
-	  lowPriorityWarning = function (condition, format) {
+	  lowPriorityWarningWithoutStack = function (condition, format) {
 	    if (format === undefined) {
-	      throw new Error('`lowPriorityWarning(condition, format, ...args)` requires a warning ' + 'message argument');
+	      throw new Error('`lowPriorityWarningWithoutStack(condition, format, ...args)` requires a warning ' + 'message argument');
 	    }
+
 	    if (!condition) {
-	      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+	      for (var _len2 = arguments.length, args = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
 	        args[_key2 - 2] = arguments[_key2];
 	      }
 
-	      printWarning.apply(undefined, [format].concat(args));
+	      printWarning.apply(void 0, [format].concat(args));
 	    }
 	  };
 	}
 
-	var lowPriorityWarning$1 = lowPriorityWarning;
+	var lowPriorityWarningWithoutStack$1 = lowPriorityWarningWithoutStack;
 
 	function typeOf(object) {
 	  if (typeof object === 'object' && object !== null) {
 	    var $$typeof = object.$$typeof;
+
 	    switch ($$typeof) {
 	      case REACT_ELEMENT_TYPE:
 	        var type = object.type;
@@ -892,6 +972,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          case REACT_STRICT_MODE_TYPE:
 	          case REACT_SUSPENSE_TYPE:
 	            return type;
+
 	          default:
 	            var $$typeofType = type && type.$$typeof;
 
@@ -900,10 +981,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	              case REACT_FORWARD_REF_TYPE:
 	              case REACT_PROVIDER_TYPE:
 	                return $$typeofType;
+
 	              default:
 	                return $$typeof;
 	            }
+
 	        }
+
 	      case REACT_LAZY_TYPE:
 	      case REACT_MEMO_TYPE:
 	      case REACT_PORTAL_TYPE:
@@ -912,9 +996,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  return undefined;
-	}
+	} // AsyncMode is deprecated along with isAsyncMode
 
-	// AsyncMode is deprecated along with isAsyncMode
 	var AsyncMode = REACT_ASYNC_MODE_TYPE;
 	var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
 	var ContextConsumer = REACT_CONTEXT_TYPE;
@@ -928,17 +1011,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Profiler = REACT_PROFILER_TYPE;
 	var StrictMode = REACT_STRICT_MODE_TYPE;
 	var Suspense = REACT_SUSPENSE_TYPE;
+	var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
 
-	var hasWarnedAboutDeprecatedIsAsyncMode = false;
-
-	// AsyncMode should be deprecated
 	function isAsyncMode(object) {
 	  {
 	    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
 	      hasWarnedAboutDeprecatedIsAsyncMode = true;
-	      lowPriorityWarning$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+	      lowPriorityWarningWithoutStack$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
 	    }
 	  }
+
 	  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
 	}
 	function isConcurrentMode(object) {
@@ -1921,7 +2003,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        last: '最后一页',
 	        first: '第一页',
 	        go: '第',
-	        sum: '共'
+	        sum: '共',
+	        pageNum: '页码数'
+	    },
+	    Dialog: {
+	        close: '关闭',
+	        submit: '确认',
+	        cancel: '返回'
 	    }
 	};
 
