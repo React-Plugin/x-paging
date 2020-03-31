@@ -1,3 +1,10 @@
+<!--
+ * @Descripttion: 
+ * @Author: tianxiangbing
+ * @Date: 2018-11-29 15:13:24
+ * @LastEditTime: 2020-03-31 15:23:45
+ * @github: https://github.com/tianxiangbing
+ -->
 # x-paging
 react分页组件x-paging，它依赖于x-input组件，主要是页码限定为正整数.
 # npm
@@ -29,6 +36,8 @@ react分页组件x-paging，它依赖于x-input组件，主要是页码限定为
 翻页时的回调方法
 ## local
 国际化语言包
+## pageSizeOptions :[10,20,30]
+每页条数选择器，空数组时不展示,默认不展示
 ### 关于作者
 [https://github.com/tianxiangbing](https://github.com/tianxiangbing)
 

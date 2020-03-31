@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: tianxiangbing
+ * @Date: 2018-11-29 15:13:24
+ * @LastEditTime: 2020-03-31 15:24:04
+ * @github: https://github.com/tianxiangbing
+ */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Paging from '../src/index';
@@ -11,14 +18,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
   }
-  callback(v) {
-    console.log('当前页码：',v)
+  callback(v,pagesize) {
+    console.log('当前页码：',v,pagesize)
   }
   render() {
     return (
       <div>
-       <Paging local={{...local.Paging,...en}} total="60" pagesize="5" current="2" callback={this.callback.bind(this)}/>
-       <Paging total="60" pagesize="5" current="2" callback={this.callback.bind(this)}/>
+       <Paging local={{...local.Paging,...en}} total={60} pagesize={5} current={2} callback={this.callback.bind(this)}/>
+       <Paging pageSizeOptions={[10,20,40]} total={60} pagesize={5} current={2} callback={this.callback.bind(this)}/>
       </div>
     )
   }

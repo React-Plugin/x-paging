@@ -163,7 +163,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        _this.renderContent = function (local, localCode) {
 	            var obj = _this.state;
-	            return _react2.default.createElement("div", { className: "x-paging" }, _react2.default.createElement("button", { onClick: _this.goFirst, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last" })), _react2.default.createElement("button", { onClick: _this.goPrev, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last1" })), _react2.default.createElement("span", null, local.go, _react2.default.createElement(_jsxInput.PosInterInput, { onChange: _this.onChangeHandle, onBlur: _this.onBlur, onKeyUp: _this.onKeyup, value: _this.state.current, placeholder: local.pageNum }), local.page, _react2.default.createElement("span", { className: "sum" }, local.sum, obj.sumPage, local.page)), _react2.default.createElement("button", { onClick: _this.goNext, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next" })), _react2.default.createElement("button", { onClick: _this.goLast, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next1" })));
+	            return _react2.default.createElement("div", { className: "x-paging" }, _react2.default.createElement("button", { onClick: _this.goFirst, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last" })), _react2.default.createElement("button", { onClick: _this.goPrev, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last1" })), _react2.default.createElement("span", null, local.go, _react2.default.createElement(_jsxInput.PosInterInput, { onChange: _this.onChangeHandle, onBlur: _this.onBlur, onKeyUp: _this.onKeyup, value: _this.state.current, placeholder: local.pageNum }), local.page, _react2.default.createElement("span", { className: "sum" }, local.sum, obj.sumPage, local.page)), _react2.default.createElement("button", { onClick: _this.goNext, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next" })), _react2.default.createElement("button", { onClick: _this.goLast, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next1" })), _this.renderPageSize());
 	        };
 
 	        var current = props.current || 1;
@@ -175,6 +175,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this.goLast = _this.goLast.bind(_this);
 	        _this.onKeyup = _this.onKeyup.bind(_this);
 	        _this.onBlur = _this.onBlur.bind(_this);
+	        _this.renderPageSize = _this.renderPageSize.bind(_this);
+	        _this.changePageSize = _this.changePageSize.bind(_this);
 	        return _this;
 	    }
 
@@ -182,12 +184,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "compute",
 	        value: function compute(props, curr) {
 	            var current = curr || this.state.current;
+	            var sumPage = props.total % props.pagesize === 0 ? parseInt(props.total / props.pagesize, 0) : parseInt(props.total / props.pagesize + 1, 0);
+	            current = Math.min(sumPage, current);
 	            this.obj = {
-	                sumPage: props.total % props.pagesize === 0 ? parseInt(props.total / props.pagesize, 0) : parseInt(props.total / props.pagesize + 1, 0),
+	                sumPage: sumPage,
 	                pagesize: props.pagesize || 1,
 	                total: props.total
 	            };
-	            return _extends({ isFirst: current <= 1, isLast: current >= this.obj.sumPage }, this.obj);
+	            return _extends({ current: current, isFirst: current <= 1, isLast: current >= this.obj.sumPage }, this.obj);
 	        }
 	    }, {
 	        key: "reComputeState",
@@ -196,7 +200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var state = this.compute(this.state);
 	            this.setState(_extends({}, state), function () {
-	                _this2.props.callback && _this2.props.callback(_this2.state.current);
+	                _this2.props.callback && _this2.props.callback(_this2.state.current, _this2.state.pagesize);
 	            });
 	        }
 	    }, {
@@ -276,6 +280,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	    }, {
+	        key: "renderPageSize",
+	        value: function renderPageSize() {
+	            var pageSizeOptions = this.props.pageSizeOptions;
+
+	            if (pageSizeOptions.length > 0) {
+	                var options = pageSizeOptions.map(function (item) {
+	                    return _react2.default.createElement("option", { key: item, value: item }, item);
+	                });
+	                return _react2.default.createElement("select", { value: this.state.pagesize, onChange: this.changePageSize }, options);
+	            }
+	        }
+	    }, {
+	        key: "changePageSize",
+	        value: function changePageSize(e) {
+	            var _this8 = this;
+
+	            var pagesize = Number(e.target.value);
+	            this.setState({ pagesize: pagesize }, function () {
+	                _this8.reComputeState();
+	            });
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
 	            var defaultValue = {};
@@ -291,12 +317,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	Paging.propTypes = {
 	    current: _propTypes2.default.number.isRequired,
 	    pagesize: _propTypes2.default.number.isRequired,
-	    total: _propTypes2.default.number.isRequired
+	    total: _propTypes2.default.number.isRequired,
+	    pageSizeOptions: _propTypes2.default.array
 	};
 	Paging.defaultProps = {
 	    current: 1,
 	    pagesize: 10,
-	    total: 0
+	    total: 0,
+	    pageSizeOptions: []
 	};
 	exports.default = Paging;
 
