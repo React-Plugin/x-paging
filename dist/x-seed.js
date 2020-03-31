@@ -185,7 +185,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function compute(props, curr) {
 	            var current = curr || this.state.current;
 	            var sumPage = props.total % props.pagesize === 0 ? parseInt(props.total / props.pagesize, 0) : parseInt(props.total / props.pagesize + 1, 0);
-	            current = Math.min(sumPage, current);
+	            current = Math.min(sumPage, current) || 1;
 	            this.obj = {
 	                sumPage: sumPage,
 	                pagesize: props.pagesize || 1,

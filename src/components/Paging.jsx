@@ -43,7 +43,7 @@ export default class Paging extends Component {
     compute(props, curr) {
         let current = curr || this.state.current;
         let sumPage = props.total % props.pagesize === 0 ? parseInt(props.total / props.pagesize, 0) : parseInt(props.total / props.pagesize + 1, 0);
-        current = Math.min(sumPage,current);
+        current = Math.min(sumPage,current)||1;
         this.obj = {
             sumPage,
             pagesize: props.pagesize || 1,
