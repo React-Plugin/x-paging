@@ -163,7 +163,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        _this.renderContent = function (local, localCode) {
 	            var obj = _this.state;
-	            return _react2.default.createElement("div", { className: "x-paging" }, _react2.default.createElement("button", { onClick: _this.goFirst, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last" })), _react2.default.createElement("button", { onClick: _this.goPrev, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last1" })), _react2.default.createElement("span", null, local.go, _react2.default.createElement(_jsxInput.PosInterInput, { onChange: _this.onChangeHandle, onBlur: _this.onBlur, onKeyUp: _this.onKeyup, value: _this.state.current, placeholder: local.pageNum }), local.page, _react2.default.createElement("span", { className: "sum" }, local.sum, obj.sumPage, local.page)), _react2.default.createElement("button", { onClick: _this.goNext, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next" })), _react2.default.createElement("button", { onClick: _this.goLast, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next1" })), _this.renderPageSize());
+	            return _react2.default.createElement("div", { className: "x-paging", ref: function ref(_ref) {
+	                    return _this.pager = _ref;
+	                } }, _react2.default.createElement("button", { onClick: _this.goFirst, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last" })), _react2.default.createElement("button", { onClick: _this.goPrev, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last1" })), _react2.default.createElement("span", null, local.go, _react2.default.createElement(_jsxInput.PosInterInput, { onChange: _this.onChangeHandle, onBlur: _this.onBlur, onKeyUp: _this.onKeyup, value: _this.state.current, placeholder: local.pageNum }), local.page, _react2.default.createElement("span", { className: "sum" }, local.sum, obj.sumPage, local.page)), _react2.default.createElement("button", { onClick: _this.goNext, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next" })), _react2.default.createElement("button", { onClick: _this.goLast, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next1" })), _this.renderPageSize());
 	        };
 
 	        var current = props.current || 1;
@@ -177,6 +179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _this.onBlur = _this.onBlur.bind(_this);
 	        _this.renderPageSize = _this.renderPageSize.bind(_this);
 	        _this.changePageSize = _this.changePageSize.bind(_this);
+	        _this.pager = _react2.default.createRef();
 	        return _this;
 	    }
 
@@ -207,8 +210,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "onChangeHandle",
 	        value: function onChangeHandle(e) {}
 	    }, {
-	        key: "UNSAFE_componentWillReceiveProps",
-	        value: function UNSAFE_componentWillReceiveProps(newProps, newState) {
+	        key: "componentWillReceiveProps",
+	        value: function componentWillReceiveProps(newProps, newState) {
 	            if (newProps && (newProps.pagesize !== this.state.pagesize || newProps.total !== this.state.total || newProps.current !== this.state.current)) {
 	                var state = this.compute(newProps);
 	                this.setState(_extends({}, state));
@@ -300,6 +303,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.setState({ pagesize: pagesize }, function () {
 	                _this8.reComputeState();
 	            });
+	        }
+	    }, {
+	        key: "componentDidMount",
+	        value: function componentDidMount() {
+	            //绑定一个跳转至第一页的dom事件
+	            // let event= new CEvent('goFirst');
+	            this.pager.addEventListener('goFirst', this.goFirst, false);
+	        }
+	    }, {
+	        key: "componentWillUnmount",
+	        value: function componentWillUnmount() {
+	            this.pager.removeEventListener('goFirst', this.goFirst, false);
 	        }
 	    }, {
 	        key: "render",

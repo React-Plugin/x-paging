@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Author: tianxiangbing
  * @Date: 2018-11-29 15:13:24
- * @LastEditTime: 2020-03-31 16:34:22
+ * @LastEditTime: 2020-07-15 18:56:45
  * @github: https://github.com/tianxiangbing
  */
 import React from 'react';
@@ -21,9 +21,14 @@ class App extends React.Component {
   callback(v,pagesize) {
     console.log('当前页码：',v,pagesize)
   }
+  goFirst=()=>{
+    let ps= document.getElementsByClassName('x-paging');
+    ps[0].dispatchEvent(new Event('goFirst'))
+  }
   render() {
     return (
       <div>
+        <button onClick={this.goFirst}>到第一页</button>
        <Paging local={{...local.Paging,...en}} total={60} pagesize={5} current={1} callback={this.callback.bind(this)}/>
        <Paging pageSizeOptions={[10,20,40]} total={60} pagesize={5} current={2} callback={this.callback.bind(this)}/>
       </div>

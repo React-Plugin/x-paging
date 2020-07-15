@@ -11,7 +11,6 @@ import { PosInterInput } from "jsx-input";
 import I18n from 'x-i18n';
 import local from '../local/zh_CN';
 import PropTypes from "prop-types";
-
 export default class Paging extends Component {
 
     static propTypes = {
@@ -39,6 +38,7 @@ export default class Paging extends Component {
         this.onBlur = this.onBlur.bind(this);
         this.renderPageSize = this.renderPageSize.bind(this);
         this.changePageSize = this.changePageSize.bind(this);
+        this.pager = React.createRef();
     }
     compute(props, curr) {
         let current = curr || this.state.current;
@@ -59,7 +59,7 @@ export default class Paging extends Component {
     }
     onChangeHandle(e) {
     }
-    UNSAFE_componentWillReceiveProps(newProps, newState) {
+    componentWillReceiveProps(newProps, newState) {
         if (newProps && (newProps.pagesize !== this.state.pagesize || newProps.total !== this.state.total || newProps.current !== this.state.current)) {
             let state = this.compute(newProps);
             this.setState({ ...state });
@@ -126,7 +126,7 @@ export default class Paging extends Component {
     renderContent = (local, localCode) => {
         let obj = this.state;
         return (
-            <div className="x-paging">
+            <div className="x-paging" ref={ref=>this.pager=ref}>
                 <button onClick={this.goFirst} className={this.state.isFirst ? 'disabled' : ''}><i className="xui icon-last" /></button>
                 <button onClick={this.goPrev} className={this.state.isFirst ? 'disabled' : ''}><i className="xui icon-last1" /></button>
                 <span>
@@ -138,6 +138,14 @@ export default class Paging extends Component {
                 {this.renderPageSize()}
             </div>
         )
+    }
+    componentDidMount(){
+        //绑定一个跳转至第一页的dom事件
+        // let event= new CEvent('goFirst');
+        this.pager.addEventListener('goFirst',this.goFirst,false);
+    }
+    componentWillUnmount(){
+        this.pager.removeEventListener('goFirst',this.goFirst,false);
     }
     render() {
         let defaultValue = {};
