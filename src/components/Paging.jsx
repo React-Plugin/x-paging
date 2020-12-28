@@ -113,7 +113,7 @@ export default class Paging extends Component {
         if (pageSizeOptions.length > 0) {
             let options = pageSizeOptions.map(item => <option key={item} value={item}>{item}</option>)
             return (
-                <select value={this.state.pagesize} onChange={this.changePageSize}>{options}</select>
+                <select  title={local.recordPage}  value={this.state.pagesize} onChange={this.changePageSize}>{options}</select>
             )
         }
     }
@@ -127,14 +127,14 @@ export default class Paging extends Component {
         let obj = this.state;
         return (
             <div className="x-paging" ref={ref=>this.pager=ref}>
-                <button onClick={this.goFirst} className={this.state.isFirst ? 'disabled' : ''}><i className="xui icon-last" /></button>
-                <button onClick={this.goPrev} className={this.state.isFirst ? 'disabled' : ''}><i className="xui icon-last1" /></button>
+                <button title={local.first} onClick={this.goFirst} className={this.state.isFirst ? 'disabled' : ''}><i className="xui icon-last" /></button>
+                <button title={local.prev} onClick={this.goPrev} className={this.state.isFirst ? 'disabled' : ''}><i className="xui icon-last1" /></button>
                 <span>
                     {local.go}<PosInterInput onChange={this.onChangeHandle} onBlur={this.onBlur} onKeyUp={this.onKeyup} value={this.state.current} placeholder={local.pageNum} />{local.page}
                     <span className="sum">{local.sum}{obj.sumPage}{local.page}</span>
                 </span>
-                <button onClick={this.goNext} className={this.state.isLast ? 'disabled' : ''}><i className="xui icon-next" /></button>
-                <button onClick={this.goLast} className={this.state.isLast ? 'disabled' : ''}><i className="xui icon-next1" /></button>
+                <button title={local.next} onClick={this.goNext} className={this.state.isLast ? 'disabled' : ''}><i className="xui icon-next" /></button>
+                <button title={local.last} onClick={this.goLast} className={this.state.isLast ? 'disabled' : ''}><i className="xui icon-next1" /></button>
                 {this.renderPageSize()}
             </div>
         )

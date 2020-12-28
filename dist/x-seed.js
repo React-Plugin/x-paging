@@ -165,7 +165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var obj = _this.state;
 	            return _react2.default.createElement("div", { className: "x-paging", ref: function ref(_ref) {
 	                    return _this.pager = _ref;
-	                } }, _react2.default.createElement("button", { onClick: _this.goFirst, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last" })), _react2.default.createElement("button", { onClick: _this.goPrev, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last1" })), _react2.default.createElement("span", null, local.go, _react2.default.createElement(_jsxInput.PosInterInput, { onChange: _this.onChangeHandle, onBlur: _this.onBlur, onKeyUp: _this.onKeyup, value: _this.state.current, placeholder: local.pageNum }), local.page, _react2.default.createElement("span", { className: "sum" }, local.sum, obj.sumPage, local.page)), _react2.default.createElement("button", { onClick: _this.goNext, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next" })), _react2.default.createElement("button", { onClick: _this.goLast, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next1" })), _this.renderPageSize());
+	                } }, _react2.default.createElement("button", { title: local.first, onClick: _this.goFirst, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last" })), _react2.default.createElement("button", { title: local.prev, onClick: _this.goPrev, className: _this.state.isFirst ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-last1" })), _react2.default.createElement("span", null, local.go, _react2.default.createElement(_jsxInput.PosInterInput, { onChange: _this.onChangeHandle, onBlur: _this.onBlur, onKeyUp: _this.onKeyup, value: _this.state.current, placeholder: local.pageNum }), local.page, _react2.default.createElement("span", { className: "sum" }, local.sum, obj.sumPage, local.page)), _react2.default.createElement("button", { title: local.next, onClick: _this.goNext, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next" })), _react2.default.createElement("button", { title: local.last, onClick: _this.goLast, className: _this.state.isLast ? 'disabled' : '' }, _react2.default.createElement("i", { className: "xui icon-next1" })), _this.renderPageSize());
 	        };
 
 	        var current = props.current || 1;
@@ -291,7 +291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var options = pageSizeOptions.map(function (item) {
 	                    return _react2.default.createElement("option", { key: item, value: item }, item);
 	                });
-	                return _react2.default.createElement("select", { value: this.state.pagesize, onChange: this.changePageSize }, options);
+	                return _react2.default.createElement("select", { title: _zh_CN2.default.recordPage, value: this.state.pagesize, onChange: this.changePageSize }, options);
 	            }
 	        }
 	    }, {
@@ -2069,7 +2069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @Descripttion: 
 	 * @Author: tianxiangbing
 	 * @Date: 2019-02-22 10:58:58
-	 * @LastEditTime: 2019-11-13 16:32:23
+	 * @LastEditTime: 2020-12-28 15:17:10
 	 * @github: https://github.com/tianxiangbing
 	 */
 	exports.default = {
@@ -2080,7 +2080,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    first: '第一页',
 	    go: '第',
 	    sum: '共',
-	    pageNum: '页码数'
+	    pageNum: '页码数',
+	    recordPage: '每页记录数'
 	};
 
 /***/ })
